@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.hackerrank.eshopping.product.dashboard.controller.ProductsControllerTest
 -------------------------------------------------------------------------------
-Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.859 s - in com.hackerrank.eshopping.product.dashboard.controller.ProductsControllerTest
+Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.458 s - in com.hackerrank.eshopping.product.dashboard.controller.ProductsControllerTest
