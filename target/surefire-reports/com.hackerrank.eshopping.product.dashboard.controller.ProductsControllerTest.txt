@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.hackerrank.eshopping.product.dashboard.controller.ProductsControllerTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 6.442 s <<< FAILURE! - in com.hackerrank.eshopping.product.dashboard.controller.ProductsControllerTest
+createProduct(com.hackerrank.eshopping.product.dashboard.controller.ProductsControllerTest)  Time elapsed: 5.713 s  <<< FAILURE!
+java.lang.AssertionError: Status expected:<201> but was:<404>
+	at com.hackerrank.eshopping.product.dashboard.controller.ProductsControllerTest.createProduct(ProductsControllerTest.java:66)
+
