@@ -1,25 +1,61 @@
 package com.hackerrank.eshopping.product.dashboard.model;
 
-public class Product {
+import java.util.Optional;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@Entity
+@JsonPropertyOrder({ "id","name","category","retail_price","discounted_price","availability"})
+public class Product{
+	@Id 
     private Long id;
     private String name;
     private String category;
-    private Double retail_price;
-    private Double discounted_price;
+    @JsonProperty("retail_price")
+    @Column(name = "retailprice")
+    private Double retailPrice;
+    @JsonProperty("discounted_price")
+    @Column(name = "discountedprice")
+    private Double discountedPrice;
     private Boolean availability;
+    @JsonIgnore
+    @Column(name = "discountpercentage")
+    private Integer discountPercentage;
 
     public Product() {
     }
 
-    public Product(Long id, String name, String category, Double retail_price, Double discounted_price, Boolean availability) {
+    public Product(Long id, String name, String category, Double retailPrice, Double discountedPrice, Boolean availability) {
         this.id = id;
         this.name = name;
         this.category = category;
-        this.retail_price = retail_price;
-        this.discounted_price = discounted_price;
+        this.retailPrice = retailPrice;
+        this.discountedPrice = discountedPrice;
         this.availability = availability;
     }
+    
+    public void mergeProduct(Product product) {
+    	discountedPrice = Optional.ofNullable(product.getDiscountedPrice()).orElseGet(()->this.discountedPrice);
+    	retailPrice = Optional.ofNullable(product.getRetailPrice()).orElseGet(()->this.retailPrice);
+    	availability = Optional.ofNullable(product.getAvailability()).orElseGet(()->this.availability);
+    }
 
+    @PrePersist @PreUpdate
+    private void CalculateDiscountPercentage() {
+    	if(this.retailPrice <= 0 || this.discountedPrice == null) 
+    		this.discountPercentage = 0;
+    	else
+    		this.discountPercentage = (int)Math.round((this.retailPrice - this.discountedPrice) / this.retailPrice *100);
+    }
+    
     public Long getId() {
         return id;
     }
@@ -44,27 +80,35 @@ public class Product {
         this.category = category;
     }
 
-    public Double getRetailPrice() {
-        return retail_price;
-    }
+	public Integer getDiscountPercentage() {
+		return discountPercentage;
+	}
 
-    public void setRetailPrice(Double retail_price) {
-        this.retail_price = retail_price;
-    }
+	public void setDiscountPercentage(Integer discountPercentage) {
+		this.discountPercentage = discountPercentage;
+	}
 
-    public Double getDiscountedPrice() {
-        return discounted_price;
-    }
+	public Double getRetailPrice() {
+		return retailPrice;
+	}
 
-    public void setDiscountedPrice(Double discounted_price) {
-        this.discounted_price = discounted_price;
-    }
+	public void setRetailPrice(Double retailPrice) {
+		this.retailPrice = retailPrice;
+	}
 
-    public Boolean getAvailability() {
-        return availability;
-    }
+	public Double getDiscountedPrice() {
+		return discountedPrice;
+	}
 
-    public void setAvailability(Boolean availability) {
-        this.availability = availability;
-    }
+	public void setDiscountedPrice(Double discountedPrice) {
+		this.discountedPrice = discountedPrice;
+	}
+
+	public Boolean getAvailability() {
+		return availability;
+	}
+
+	public void setAvailability(Boolean availability) {
+		this.availability = availability;
+	}
 }

@@ -1,83 +1,74 @@
 package com.hackerrank.eshopping.product.dashboard.controller;
 
-import com.hackerrank.eshopping.product.dashboard.model.Product;
-import com.hackerrank.eshopping.product.dashboard.service.ProductService;
-import com.hackerrank.eshopping.product.dashboard.util.CustomErrors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hackerrank.eshopping.product.dashboard.model.Product;
+import com.hackerrank.eshopping.product.dashboard.services.ProductsServices;
 
-// import org.springframework.web.bind.annotation.RequestMapping;
-// import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/products")
 public class ProductsController {
-    
-    public static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
 
-    @Autowired
-    ProductService productService; //Service which will do all data retrieval/manipulation work
-
-    
-    // -------------------Create a Product-------------------------------------------
-
-    @RequestMapping(value = "", method = RequestMethod.POST,consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> createProduct(@RequestBody Product product) {
-        logger.info("Creating Product : {}", product);
-
-        if (productService.isProductExist(product)) {
-            logger.error("Unable to create. A Product with name {} already exist", product.getId());
-            return new ResponseEntity<>(new CustomErrors("Unable to create. A Product with id " +
-                    product.getId() + " already exist."), HttpStatus.BAD_REQUEST);
-        }
-        productService.saveProduct(product);
-
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
-    }
-
-    // -------------------Retrieve All Products--------------------------------------------
-
-    @RequestMapping(value = "", method = RequestMethod.GET,produces = "application/json")
-    public ResponseEntity<List<Product>> listAllProducts() {
-        List<Product> products = productService.findAllProducts();
-        if (products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(products, HttpStatus.OK);
-    }
-
-    // -------------------Retrieve Product by ID------------------------------------------
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getProduct(@PathVariable("id") long id) {
-        logger.info("Fetching Product with id {}", id);
-        Product product = productService.findById(id);
-        if (product == null) {
-            logger.error("Product with id {} not found.", id);
-            return new ResponseEntity<>(new CustomErrors("Product with id " + id  + " not found"), HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(product, HttpStatus.OK);
-    }
-
-    // -------------------Retrieve Product by Category------------------------------------------
-
-    @RequestMapping(value = "/?category={category}", method = RequestMethod.GET)
-    public ResponseEntity<?> getProduct(@PathVariable("category") String category) {
-        logger.info("Fetching Product with category {}", category);
-        Product product = productService.findByCategory(category);
-        if (product == null) {
-            logger.error("Product with category {} not found.", category);
-            return new ResponseEntity<>(new CustomErrors("Product with category " + category  + " not found"), HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(product, HttpStatus.OK);
-    }
-
-    
-
+	@Autowired
+	ProductsServices productsServices;
+	
+	@PostMapping
+	public ResponseEntity<?> addProducts(@RequestBody Product product,BindingResult bindingResult){
+		// productValidador.validate(product, bindingResult);
+		if(bindingResult.hasErrors()) {
+			return ResponseEntity.badRequest().build();
+		}
+		try {
+			productsServices.saveProducts(product);
+			return ResponseEntity.status(HttpStatus.CREATED).build();
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	@PutMapping("/{product_id}")
+	public ResponseEntity<?> updateProductsById(@PathVariable("product_id") Long productId,
+															@RequestBody Product product){
+		try {
+			productsServices.updateProduct(productId, product);
+			return ResponseEntity.ok().build();
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	@GetMapping("/{product_id}")
+	public ResponseEntity<?> getProductById(@PathVariable("product_id") Long productId){
+		try {
+			return ResponseEntity.ok(productsServices.getProductsById(productId));
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<Product>> getProductBy(@RequestParam(name = "category",required = false)
+					String category,@RequestParam(name = "availability",required = false)Boolean availability){
+		try {
+			if(Optional.ofNullable(availability).isPresent() && Optional.ofNullable(category).isPresent()) {
+				return ResponseEntity.ok(productsServices.listProductsByCategoryAndAvailability(category,availability));
+			}else if(!Optional.ofNullable(availability).isPresent() && !Optional.ofNullable(category).isPresent()) {
+				return ResponseEntity.ok(productsServices.listAllProducts());
+			}else if(!Optional.ofNullable(availability).isPresent() && Optional.ofNullable(category).isPresent()) {
+				return ResponseEntity.ok(productsServices.listProductsByCategory(category));
+			}else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 }
