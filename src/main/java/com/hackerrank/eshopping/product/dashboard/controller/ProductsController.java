@@ -27,16 +27,14 @@ public class ProductsController {
     
     // -------------------Create a Product-------------------------------------------
 
-    @RequestMapping(value = "/products/", method = RequestMethod.POST,consumes = "application/json")
+    @RequestMapping(value = "", method = RequestMethod.POST,consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
         logger.info("Creating Product : {}", product);
-        System.out.println("DINEEP THOMAS HERE");
-        System.out.println(product);
 
         if (productService.isProductExist(product)) {
             logger.error("Unable to create. A Product with name {} already exist", product.getId());
             return new ResponseEntity<>(new CustomErrors("Unable to create. A Product with id " +
-                    product.getId() + " already exist."), HttpStatus.CONFLICT);
+                    product.getId() + " already exist."), HttpStatus.BAD_REQUEST);
         }
         productService.saveProduct(product);
 
@@ -45,7 +43,7 @@ public class ProductsController {
 
     // -------------------Retrieve All Products--------------------------------------------
 
-    @RequestMapping(value = "/products/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET,produces = "application/json")
     public ResponseEntity<List<Product>> listAllProducts() {
         List<Product> products = productService.findAllProducts();
         if (products.isEmpty()) {
@@ -56,7 +54,7 @@ public class ProductsController {
 
     // -------------------Retrieve Product by ID------------------------------------------
 
-    @RequestMapping(value = "/products/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getProduct(@PathVariable("id") long id) {
         logger.info("Fetching Product with id {}", id);
         Product product = productService.findById(id);
@@ -69,7 +67,7 @@ public class ProductsController {
 
     // -------------------Retrieve Product by Category------------------------------------------
 
-    @RequestMapping(value = "/products?category={category}", method = RequestMethod.GET)
+    @RequestMapping(value = "/?category={category}", method = RequestMethod.GET)
     public ResponseEntity<?> getProduct(@PathVariable("category") String category) {
         logger.info("Fetching Product with category {}", category);
         Product product = productService.findByCategory(category);

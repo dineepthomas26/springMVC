@@ -4,19 +4,19 @@ public class Product {
     private Long id;
     private String name;
     private String category;
-    private Double retailPrice;
-    private Double discountedPrice;
+    private Double retail_price;
+    private Double discounted_price;
     private Boolean availability;
 
     public Product() {
     }
 
-    public Product(Long id, String name, String category, Double retailPrice, Double discountedPrice, Boolean availability) {
+    public Product(Long id, String name, String category, Double retail_price, Double discounted_price, Boolean availability) {
         this.id = id;
         this.name = name;
         this.category = category;
-        this.retailPrice = retailPrice;
-        this.discountedPrice = discountedPrice;
+        this.retail_price = retail_price;
+        this.discounted_price = discounted_price;
         this.availability = availability;
     }
 
@@ -45,19 +45,19 @@ public class Product {
     }
 
     public Double getRetailPrice() {
-        return retailPrice;
+        return retail_price;
     }
 
-    public void setRetailPrice(Double retailPrice) {
-        this.retailPrice = retailPrice;
+    public void setRetailPrice(Double retail_price) {
+        this.retail_price = retail_price;
     }
 
     public Double getDiscountedPrice() {
-        return discountedPrice;
+        return discounted_price;
     }
 
-    public void setDiscountedPrice(Double discountedPrice) {
-        this.discountedPrice = discountedPrice;
+    public void setDiscountedPrice(Double discounted_price) {
+        this.discounted_price = discounted_price;
     }
 
     public Boolean getAvailability() {

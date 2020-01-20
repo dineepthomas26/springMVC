@@ -35,14 +35,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public void saveProduct(Product product) {
-        synchronized (this) {    
+         {    
             products.put(product.getId(), product);
             idNameHashMap.put(product.getCategory(), product.getId());
         }
     }
 
     public void updateProduct(Product product) {
-        synchronized (this) {    
+         {    
             products.put(product.getId(), product);
             idNameHashMap.put(product.getCategory(), product.getId());
         }
