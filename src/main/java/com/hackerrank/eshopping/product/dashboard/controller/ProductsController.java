@@ -22,7 +22,6 @@ public class ProductsController {
 	
 	@PostMapping
 	public ResponseEntity<?> addProducts(@RequestBody Product product,BindingResult bindingResult){
-		// productValidador.validate(product, bindingResult);
 		if(bindingResult.hasErrors()) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -30,7 +29,7 @@ public class ProductsController {
 			productsServices.saveProducts(product);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseEntity.badRequest().build();
 		}
 	}
 	
@@ -41,7 +40,7 @@ public class ProductsController {
 			productsServices.updateProduct(productId, product);
 			return ResponseEntity.ok().build();
 		}catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseEntity.badRequest().build();
 		}
 	}
 	
@@ -50,7 +49,7 @@ public class ProductsController {
 		try {
 			return ResponseEntity.ok(productsServices.getProductsById(productId));
 		}catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseEntity.notFound().build();
 		}
 	}
 	
@@ -65,7 +64,7 @@ public class ProductsController {
 			}else if(!Optional.ofNullable(availability).isPresent() && Optional.ofNullable(category).isPresent()) {
 				return ResponseEntity.ok(productsServices.listProductsByCategory(category));
 			}else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+				return ResponseEntity.badRequest().build();
 			}
 		}catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

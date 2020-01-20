@@ -1,4 +1,4 @@
-package com.hackerrank.eshopping.product.dashboard.productcaching;
+package com.hackerrank.eshopping.product.dashboard.repository;
 
 import java.util.List;
 

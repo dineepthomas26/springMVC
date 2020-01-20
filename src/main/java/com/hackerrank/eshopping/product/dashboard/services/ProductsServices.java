@@ -12,7 +12,7 @@ import org.springframework.web.util.UriUtils;
 
 import com.hackerrank.eshopping.product.dashboard.exceptions.CustomException;
 import com.hackerrank.eshopping.product.dashboard.model.Product;
-import com.hackerrank.eshopping.product.dashboard.productcaching.ProductsCaching;
+import com.hackerrank.eshopping.product.dashboard.repository.ProductsCaching;
 
 @Service
 public class ProductsServices {

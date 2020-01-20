@@ -1,6 +1,6 @@
+com/hackerrank/eshopping/product/dashboard/services/ProductsServices.class
 com/hackerrank/eshopping/product/dashboard/controller/ProductsController.class
-com/hackerrank/eshopping/product/dashboard/service/ProductServiceImpl.class
 com/hackerrank/eshopping/product/dashboard/Application.class
-com/hackerrank/eshopping/product/dashboard/util/CustomErrors.class
+com/hackerrank/eshopping/product/dashboard/exceptions/CustomException.class
+com/hackerrank/eshopping/product/dashboard/repository/ProductsCaching.class
 com/hackerrank/eshopping/product/dashboard/model/Product.class
-com/hackerrank/eshopping/product/dashboard/service/ProductService.class
